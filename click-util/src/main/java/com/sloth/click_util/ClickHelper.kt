@@ -17,6 +17,7 @@ object ClickHelper {
 
   @JvmStatic
   fun canClick(view: View?): Boolean {
+    Log.d("ClickHelper","canClick ${System.currentTimeMillis()}")
     view ?: return true
     val index = removeLimeOutView(view)
     if (index < 0) {
