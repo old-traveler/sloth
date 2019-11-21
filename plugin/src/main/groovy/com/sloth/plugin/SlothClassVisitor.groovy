@@ -32,6 +32,9 @@ class SlothClassVisitor extends ClassVisitor {
       } else if ("onDestroy" == name) {
         logState("onDestroy")
         return new SlothOnDestroyVisitor(mv)
+      } else if ("onClick" == name){
+        logState("onClick")
+        return new SlothOnClickVisitor(mv)
       }
     }
     mv

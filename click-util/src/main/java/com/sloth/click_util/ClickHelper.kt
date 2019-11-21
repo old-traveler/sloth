@@ -1,5 +1,6 @@
 package com.sloth.click_util
 
+import android.util.Log
 import android.view.View
 import java.lang.ref.WeakReference
 import kotlin.reflect.KProperty
@@ -21,7 +22,13 @@ object ClickHelper {
     if (index < 0) {
       return viewMaps.add(ClickView(view))
     }
+    Log.d("ClickHelper","拦截快速点击")
     return false
+  }
+
+  @JvmStatic
+  fun isFastClick(view : View?): Boolean {
+    return !canClick(view)
   }
 
   @JvmStatic
