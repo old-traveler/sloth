@@ -1,0 +1,2 @@
+include ':app', ':click-util', ':plugin'
+rootProject.name = 'sloth'

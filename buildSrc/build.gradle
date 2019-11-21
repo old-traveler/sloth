@@ -1,0 +1,38 @@
+apply plugin: 'groovy'
+
+
+repositories {
+    jcenter()
+    google()
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation localGroovy()
+    implementation gradleApi()
+
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.android.tools.build:gradle:3.5.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+
+}
+
+sourceSets {
+    main {
+        java.srcDirs = [
+            'src/main/java',
+            '../plugin/src/main/java'
+        ]
+        groovy.srcDirs = [
+            'src/main/groovy',
+            '../plugin/src/main/groovy'
+
+        ]
+        resources.srcDirs = [
+            'src/main/resources',
+            '../plugin/src/main/resources'
+        ]
+    }
+}
+
