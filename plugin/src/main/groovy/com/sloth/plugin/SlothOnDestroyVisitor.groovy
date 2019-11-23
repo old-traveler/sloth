@@ -5,8 +5,11 @@ import org.objectweb.asm.Opcodes
 
 class SlothOnDestroyVisitor extends MethodVisitor{
 
-  SlothOnDestroyVisitor(MethodVisitor mv) {
+  String className
+
+  SlothOnDestroyVisitor(MethodVisitor mv,String className) {
     super(Opcodes.ASM4, mv)
+    this.className = className
   }
 
   @Override
@@ -14,7 +17,7 @@ class SlothOnDestroyVisitor extends MethodVisitor{
     super.visitCode()
     //方法执行前插入
     mv.visitLdcInsn("helper")
-    mv.visitLdcInsn("-----------> onDestroy")
+    mv.visitLdcInsn("-----------> onDestroy "+className)
     mv.visitMethodInsn(Opcodes.INVOKESTATIC, "android/util/Log", "e",
         "(Ljava/lang/String;Ljava/lang/String;)I", false)
     mv.visitInsn(Opcodes.POP)

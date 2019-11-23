@@ -16,28 +16,27 @@ object ClickHelper {
   private val viewMaps = mutableListOf<ClickView>()
 
   @JvmStatic
-  fun canClick(view: View?): Boolean {
-    Log.d("ClickHelper","canClick ${System.currentTimeMillis()}")
+  fun canClick(view: View?, className: String? = null): Boolean {
     view ?: return true
-    val index = removeLimeOutView(view)
+    val index = removeLimeOutView(view, className)
     if (index < 0) {
-      return viewMaps.add(ClickView(view))
+      return viewMaps.add(ClickView(view, className))
     }
-    Log.d("ClickHelper","拦截快速点击")
+    Log.d("ClickHelper", "拦截快速点击")
     return false
   }
 
   @JvmStatic
-  fun isFastClick(view : View?): Boolean {
-    return !canClick(view)
+  fun isFastClick(view: View?, className: String?): Boolean {
+    return !canClick(view, className)
   }
 
   @JvmStatic
   fun clearTimeOutView() {
-    removeLimeOutView(null)
+    removeLimeOutView()
   }
 
-  private fun removeLimeOutView(view: View?): Int {
+  private fun removeLimeOutView(view: View? = null, className: String? = null): Int {
     val it = viewMaps.iterator()
     var index = 1
     while (it.hasNext()) {
@@ -46,7 +45,7 @@ object ClickHelper {
         it.remove()
         continue
       }
-      if (item.view == view) {
+      if (item.view == view && item.className == className) {
         index = (index - 1).inv()
       }
       if (index >= 0) index++
@@ -55,7 +54,7 @@ object ClickHelper {
   }
 }
 
-class ClickView(v: View) {
+class ClickView(v: View, val className: String?) {
   val view by Weak { v }
   private var time: Long = now()
 

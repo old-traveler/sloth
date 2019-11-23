@@ -16,7 +16,7 @@ class SlothTransform extends Transform {
   def fileHandler = new FileHandler()
 
   SlothTransform(){
-    fileHandler.addTargetName("MainActivity.class")
+
   }
 
   @Override
@@ -72,7 +72,11 @@ class SlothTransform extends Transform {
     def classWriter = new ClassWriter(classReader,
         ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS)
     def classVisitor = new SlothClassVisitor(classWriter)
-    classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
+    try {
+      classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
+    } catch(Exception e){
+//      e.printStackTrace()
+    }
     classWriter.toByteArray()
   }
 

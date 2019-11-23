@@ -6,18 +6,16 @@ import org.objectweb.asm.Opcodes
 
 class SlothClassVisitor extends ClassVisitor {
 
-  def mClassName
+  String mClassName
 
   SlothClassVisitor(ClassVisitor cv) {
     super(Opcodes.ASM5, cv)
-    println("SlothClassVisitor ----->")
   }
 
   @Override
   void visit(int version, int access, String name, String signature, String superName,
       String[] interfaces) {
     this.mClassName = name
-    logState("start")
     super.visit(version, access, name, signature, superName, interfaces)
   }
 
@@ -25,24 +23,19 @@ class SlothClassVisitor extends ClassVisitor {
   MethodVisitor visitMethod(int access, String name, String desc, String signature,
       String[] exceptions) {
     def mv = cv.visitMethod(access, name, desc, signature, exceptions)
-    if ("com/sloth/click/MainActivity" == this.mClassName) {
-      if ("onCreate" == name) {
-        logState("onCreate")
-        return new SlothOnCreateVisitor(mv)
-      } else if ("onDestroy" == name) {
-        logState("onDestroy")
-        return new SlothOnDestroyVisitor(mv)
-      } else if ("onClick" == name){
-        logState("onClick")
-        return new SlothOnClickVisitor(mv)
-      }
+    if ("onCreate" == name && desc == "(Landroid/os/Bundle;)V") {
+      return new SlothOnCreateVisitor(mv, mClassName)
+    } else if ("onDestroy" == name && desc == "()V") {
+      return new SlothOnDestroyVisitor(mv, mClassName)
+    } else if ("onClick" == name && desc == "(Landroid/view/View;)V") {
+      logState("$name   $mClassName  $access  $desc $signature $exceptions")
+      return new SlothOnClickVisitor(mv,mClassName)
     }
     mv
   }
 
   @Override
   void visitEnd() {
-    logState("end")
     super.visitEnd()
   }
 

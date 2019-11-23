@@ -15,7 +15,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    tv_title.setOnClickListener(this)
+    tv_title.setOnClickListener{
+      Log.d("MainActivity","setOnClickListener")
+      onClick(it)
+    }
   }
 
 }

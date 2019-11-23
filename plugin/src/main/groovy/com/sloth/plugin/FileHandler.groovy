@@ -15,12 +15,10 @@ import java.util.zip.ZipEntry
 
 class FileHandler {
 
-  private List<String> mTargetName = new ArrayList<>()
+  private List<Closure<Boolean>> mRules = new ArrayList<>()
 
-  void addTargetName(String... name) {
-    if (name != null && name.length > 0) {
-      mTargetName.addAll(name)
-    }
+  void addRule(Closure<Boolean> rule) {
+    mRules.add(rule)
   }
 
   void handleDirectoryInput(DirectoryInput directoryInput,
@@ -85,6 +83,14 @@ class FileHandler {
         name &&
         "BuildConfig.class" !=
         name &&
-        mTargetName.contains(name))
+        checkRules(name))
+  }
+
+  private boolean checkRules(String name){
+    boolean res = true
+    mRules.each {
+      res &= it(name)
+    }
+    return res
   }
 }

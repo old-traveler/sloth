@@ -3,19 +3,22 @@ package com.sloth.plugin
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 
-class SlothOnCreateVisitor extends MethodVisitor{
+class SlothOnCreateVisitor extends MethodVisitor {
 
-  SlothOnCreateVisitor(MethodVisitor mv) {
+  String className
+
+  SlothOnCreateVisitor(MethodVisitor mv, String className) {
     super(Opcodes.ASM4, mv)
+    this.className = className
   }
-
 
   @Override
   void visitCode() {
     super.visitCode()
     //方法执行前插入
     mv.visitLdcInsn("helper")
-    mv.visitLdcInsn("-----------> MainActivity onCreate")
+    def insn = "onCreate ----->" + className
+    mv.visitLdcInsn(insn)
     mv.visitMethodInsn(Opcodes.INVOKESTATIC, "android/util/Log", "e",
         "(Ljava/lang/String;Ljava/lang/String;)I", false)
     mv.visitInsn(Opcodes.POP)
