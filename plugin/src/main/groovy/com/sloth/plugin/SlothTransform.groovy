@@ -16,7 +16,10 @@ class SlothTransform extends Transform {
   def fileHandler = new FileHandler()
 
   SlothTransform(){
-
+//    fileHandler.addRule { String name ->
+//      //添加过滤规则
+//      name.contains("Activity")
+//    }
   }
 
   @Override

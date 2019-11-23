@@ -89,7 +89,7 @@ class FileHandler {
   private boolean checkRules(String name){
     boolean res = true
     mRules.each {
-      res &= it(name)
+      res = res && it(name)
     }
     return res
   }
