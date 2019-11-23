@@ -28,7 +28,6 @@ class SlothClassVisitor extends ClassVisitor {
     } else if ("onDestroy" == name && desc == "()V") {
       return new SlothOnDestroyVisitor(mv, mClassName)
     } else if ("onClick" == name && desc == "(Landroid/view/View;)V") {
-      logState("$name   $mClassName  $access  $desc $signature $exceptions")
       return new SlothOnClickVisitor(mv,mClassName)
     }
     mv
