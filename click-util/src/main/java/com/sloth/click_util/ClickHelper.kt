@@ -2,8 +2,6 @@ package com.sloth.click_util
 
 import android.util.Log
 import android.view.View
-import java.lang.ref.WeakReference
-import kotlin.reflect.KProperty
 
 /**
  * @author: 贺宇成
@@ -12,66 +10,35 @@ import kotlin.reflect.KProperty
  */
 object ClickHelper {
   private const val timeDuration = 500L
+  private const val byView = false
+  private val noFastClickImp: NoFastClick
 
-  private val viewMaps = mutableListOf<ClickView>()
+  init {
+    noFastClickImp = if (byView) {
+      NoFastClickViewImp(timeDuration)
+    } else {
+      NoFastClickIdImp(timeDuration)
+    }
+  }
 
   @JvmStatic
-  fun canClick(view: View?, className: String? = null): Boolean {
-    view ?: return true
-    val index = removeLimeOutView(view, className)
-    if (index < 0) {
-      return viewMaps.add(ClickView(view, className))
-    }
-    Log.d("ClickHelper", "拦截快速点击")
-    return false
-  }
+  fun canClick(view: View?, className: String? = null): Boolean =
+    noFastClickImp.canClick(view, className)
 
   @JvmStatic
   fun isFastClick(view: View?, className: String?): Boolean {
-    return !canClick(view, className)
+    val isFastClick = !noFastClickImp.canClick(view, className)
+    if (isFastClick){
+      Log.d("ClickHelper","intercept fast click in $className")
+    }
+    return isFastClick
   }
 
   @JvmStatic
-  fun clearTimeOutView() {
-    removeLimeOutView()
-  }
+  fun clearTimeOutView() = noFastClickImp.clearTimeOutView()
 
-  private fun removeLimeOutView(view: View? = null, className: String? = null): Int {
-    val it = viewMaps.iterator()
-    var index = 1
-    while (it.hasNext()) {
-      val item = it.next()
-      if (item.isTimeOut(timeDuration)) {
-        it.remove()
-        continue
-      }
-      if (item.view == view && item.className == className) {
-        index = (index - 1).inv()
-      }
-      if (index >= 0) index++
-    }
-    return index.inv()
-  }
-}
-
-class ClickView(v: View, val className: String?) {
-  val view by Weak { v }
-  private var time: Long = now()
-
-  fun isTimeOut(timeDuration: Long): Boolean =
-    now() - time > timeDuration
-
-  private fun now() = System.currentTimeMillis()
-
-}
-
-class Weak<T : Any>(initializer: () -> T?) {
-  private var weakReference = WeakReference(initializer())
-
-  operator fun getValue(thisRef: Any?, property: KProperty<*>): T? = weakReference.get()
-
-  operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T?) {
-    weakReference = WeakReference(value)
-  }
+  @JvmStatic
+  fun removeLimeOutView(view: View? = null, className: String? = null): Int =
+    noFastClickImp.removeLimeOutView(view, className)
 
 }
