@@ -6,20 +6,34 @@ import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.internal.pipeline.TransformManager
+import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
-
-
 
 class SlothTransform extends Transform {
 
   def fileHandler = new FileHandler()
 
-  SlothTransform(){
-//    fileHandler.addRule { String name ->
-//      //添加过滤规则
-//      name.contains("Activity")
-//    }
+  boolean enableLife = true
+
+  static SlothClickConfig slothClickConfig = null
+
+  void initConfig(Project project, SlothClickConfig clickConfig) {
+    slothClickConfig = clickConfig
+    if (clickConfig.enableLog) {
+      String path = clickConfig.logFilePath == null ?
+          (project.getRootDir().absolutePath + File.separator + "sloth_log.txt") :
+          clickConfig.logFilePath
+      SlothLogHelper.getDefault().init(path)
+    }
+    println("enable ${clickConfig.enableLife}")
+    this.enableLife = clickConfig.enableLife
+    fileHandler.addRules(clickConfig.mRules)
+    //    fileHandler.addRule { String name ->
+    //      //添加过滤规则
+    //      name.contains("Activity")
+    //    }
+
   }
 
   @Override
@@ -57,31 +71,30 @@ class SlothTransform extends Transform {
     inputs.each {
       it.directoryInputs.each { directoryInput ->
         fileHandler.handleDirectoryInput directoryInput, outputProvider, { data ->
-          classVisitor(data)
+          classVisitor(enableLife, data)
         }
       }
 
       it.jarInputs.each { jarInput ->
         fileHandler.handleJarInput jarInput, outputProvider, { data ->
-          classVisitor(data)
+          classVisitor(enableLife, data)
         }
       }
     }
+    SlothLogHelper.getDefault().save()
     print "============================== sloth transform end cost : ${System.currentTimeMillis() - startTime}============================="
   }
 
-  static byte[] classVisitor(byte[] bytes) {
+  static byte[] classVisitor(boolean enableLife, byte[] bytes) {
     def classReader = new ClassReader(bytes)
     def classWriter = new ClassWriter(classReader,
         ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS)
-    def classVisitor = new SlothClassVisitor(classWriter)
+    def classVisitor = new SlothClassVisitor(classWriter, enableLife)
     try {
       classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
-    } catch(Exception e){
-//      e.printStackTrace()
+    } catch (Exception e) {
+      //      e.printStackTrace()
     }
     classWriter.toByteArray()
   }
-
-
 }

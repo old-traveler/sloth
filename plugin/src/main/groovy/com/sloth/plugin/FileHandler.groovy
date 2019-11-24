@@ -21,6 +21,10 @@ class FileHandler {
     mRules.add(rule)
   }
 
+  void addRules(List<Closure<Boolean>> rules){
+    mRules.addAll(rules)
+  }
+
   void handleDirectoryInput(DirectoryInput directoryInput,
       TransformOutputProvider outputProvider, Closure closure) {
     if (directoryInput.file.isDirectory()) {

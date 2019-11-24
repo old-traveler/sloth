@@ -14,7 +14,13 @@ class SlothClickPlugin implements Plugin<Project> {
   @Override
   void apply(Project project) {
     def appExtension = (AppExtension) project.getProperties().get("android")
+    project.extensions.create("slothClickConfig", SlothClickConfig.class)
     def transform = new SlothTransform()
     appExtension.registerTransform(transform)
+
+    project.afterEvaluate {
+      SlothClickConfig config = project.slothClickConfig
+      transform.initConfig(project, config)
+    }
   }
 }

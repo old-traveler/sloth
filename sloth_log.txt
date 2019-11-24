@@ -1,0 +1,10 @@
+androidx/appcompat/app/AppCompatActivity --> onCreate
+androidx/appcompat/app/AppCompatActivity --> onDestroy
+androidx/appcompat/widget/ActivityChooserView$Callbacks --> onClick
+androidx/fragment/app/FragmentActivity --> onCreate
+androidx/fragment/app/FragmentActivity --> onDestroy
+androidx/core/app/ComponentActivity --> onCreate
+com/sloth/click/MainActivity$onCreate$1 --> onClick
+com/sloth/click/MainActivity --> onClick
+com/sloth/click/MainActivity --> onCreate
+com/sloth/click/MainActivity$onCreate$2 --> onClick

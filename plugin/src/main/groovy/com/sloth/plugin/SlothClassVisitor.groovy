@@ -8,8 +8,11 @@ class SlothClassVisitor extends ClassVisitor {
 
   String mClassName
 
-  SlothClassVisitor(ClassVisitor cv) {
+  boolean enableLife = true
+
+  SlothClassVisitor(ClassVisitor cv,boolean enableLife) {
     super(Opcodes.ASM5, cv)
+    this.enableLife = enableLife
   }
 
   @Override
@@ -23,11 +26,17 @@ class SlothClassVisitor extends ClassVisitor {
   MethodVisitor visitMethod(int access, String name, String desc, String signature,
       String[] exceptions) {
     def mv = cv.visitMethod(access, name, desc, signature, exceptions)
-    if ("onCreate" == name && desc == "(Landroid/os/Bundle;)V") {
+    if (!SlothTransform.slothClickConfig.enableVisit){
+      return mv
+    }
+    if ("onCreate" == name && desc == "(Landroid/os/Bundle;)V" && this.enableLife) {
+      SlothLogHelper.getDefault().appendLine("$mClassName --> $name")
       return new SlothOnCreateVisitor(mv, mClassName)
-    } else if ("onDestroy" == name && desc == "()V") {
+    } else if ("onDestroy" == name && desc == "()V" && this.enableLife) {
+      SlothLogHelper.getDefault().appendLine("$mClassName --> $name")
       return new SlothOnDestroyVisitor(mv, mClassName)
     } else if ("onClick" == name && desc == "(Landroid/view/View;)V") {
+      SlothLogHelper.getDefault().appendLine("$mClassName --> $name")
       return new SlothOnClickVisitor(mv,mClassName)
     }
     mv
@@ -38,7 +47,4 @@ class SlothClassVisitor extends ClassVisitor {
     super.visitEnd()
   }
 
-  static void logState(String state) {
-    println("visit -----------------------------------> $state")
-  }
 }
