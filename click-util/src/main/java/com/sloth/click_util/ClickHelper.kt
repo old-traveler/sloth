@@ -9,8 +9,8 @@ import android.view.View
  * @desc:
  */
 object ClickHelper {
-  private const val timeDuration = 500L
-  private const val byView = false
+  var timeDuration = 500L
+  var byView = false
   private val noFastClickImp: NoFastClick
 
   init {

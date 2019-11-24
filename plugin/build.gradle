@@ -3,6 +3,8 @@ apply plugin: 'maven'
 repositories {
   jcenter()
   google()
+  mavenLocal() // 使用本地仓库
+  mavenCentral()
 }
 
 dependencies {
@@ -21,4 +23,25 @@ dependencies {
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
+
+
+group = 'com.sloth.plugin'
+
+version = '1.0.2'
+
+// 指定上传的路径
+def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+
+// 上传Task，Gradle会生成并上传pom.xml文件。
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: localMavenRepo)
+      pom.groupId = 'com.sloth.plugin'
+      pom.artifactId = 'click'
+      pom.packaging = 'jar'
+    }
+
+  }
+}
 

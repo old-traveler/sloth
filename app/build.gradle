@@ -4,8 +4,11 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-import com.sloth.plugin.SlothClickPlugin
-apply plugin: SlothClickPlugin
+// buildSrc 配置
+//import com.sloth.plugin.SlothClickPlugin
+//apply plugin: SlothClickPlugin
+//本地maven依赖
+apply plugin: 'com.sloth.click'
 
 android {
     compileSdkVersion 28
