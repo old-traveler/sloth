@@ -35,7 +35,7 @@ class SlothOnClickVisitor extends MethodVisitor {
     mv.visitVarInsn(ALOAD, 0)
     mv.visitVarInsn(ALOAD, 1)
     mv.visitLdcInsn(className)
-    mv.visitMethodInsn(INVOKESTATIC, "com/sloth/click_util/ClickHelper",
+    mv.visitMethodInsn(INVOKESTATIC, SlothTransform.slothClickConfig.clickHelperName,
         "isFastClick", "(Landroid/view/View;Ljava/lang/String;)Z", false)
     mv.visitVarInsn(ISTORE, 2)
     Label l1 = new Label()
