@@ -12,9 +12,17 @@ class SlothOnClickVisitor extends MethodVisitor {
 
   def canFastClick = false
 
+  int offset = 0
+
   SlothOnClickVisitor(MethodVisitor mv, String className) {
     super(ASM4, mv)
     this.className = className
+  }
+
+  SlothOnClickVisitor(MethodVisitor mv, String className, int offset) {
+    super(ASM4, mv)
+    this.className = className
+    this.offset = offset
   }
 
   @Override
@@ -33,7 +41,7 @@ class SlothOnClickVisitor extends MethodVisitor {
       return
     }
     mv.visitVarInsn(ALOAD, 0)
-    mv.visitVarInsn(ALOAD, 1)
+    mv.visitVarInsn(ALOAD, 1 + offset)
     mv.visitLdcInsn(className)
     mv.visitMethodInsn(INVOKESTATIC, SlothTransform.slothClickConfig.clickHelperName,
         "isFastClick", "(Landroid/view/View;Ljava/lang/String;)Z", false)

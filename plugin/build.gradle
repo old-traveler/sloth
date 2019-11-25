@@ -27,7 +27,7 @@ targetCompatibility = "1.7"
 
 group = 'com.sloth.plugin'
 
-version = '1.0.4'
+version = '1.1.4'
 
 // 指定上传的路径
 def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath

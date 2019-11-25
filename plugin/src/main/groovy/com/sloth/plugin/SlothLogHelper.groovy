@@ -19,6 +19,7 @@ class SlothLogHelper{
   }
 
   void init(String path){
+    content = new StringBuilder()
     filePath = path
   }
 

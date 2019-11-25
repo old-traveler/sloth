@@ -93,7 +93,9 @@ class SlothTransform extends Transform {
     try {
       classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
     } catch (Exception e) {
-      //      e.printStackTrace()
+      if(!e instanceof ClassNotFoundException){
+        e.printStackTrace()
+      }
     }
     classWriter.toByteArray()
   }
