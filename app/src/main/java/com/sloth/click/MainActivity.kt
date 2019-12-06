@@ -8,20 +8,22 @@ import android.view.View.OnClickListener
 import kotlinx.android.synthetic.main.activity_main.tv_content
 import kotlinx.android.synthetic.main.activity_main.tv_title
 
-class MainActivity : AppCompatActivity(), OnClickListener {
+open class MainActivity : BActivity(), OnClickListener {
   override fun onClick(v: View?) {
     Log.d("MainActivity","点击事件委托者")
   }
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     tv_title.setOnClickListener{
-      Log.d("MainActivity","点击事件被委托者")
       onClick(it)
+      Log.d("MainActivity","点击事件被委托者")
     }
 
-    tv_content.setOnClickListener { Log.d("MainActivity","点击内容") }
+    tv_content.setOnClickListener { Log.d("MainActivity","1222111") }
   }
+
 
 }

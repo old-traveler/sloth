@@ -8,7 +8,7 @@ class SlothOnDestroyVisitor extends MethodVisitor{
   String className
 
   SlothOnDestroyVisitor(MethodVisitor mv,String className) {
-    super(Opcodes.ASM4, mv)
+    super(Opcodes.ASM5, mv)
     this.className = className
   }
 

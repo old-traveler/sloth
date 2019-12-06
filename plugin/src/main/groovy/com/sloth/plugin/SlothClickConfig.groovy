@@ -14,7 +14,7 @@ class SlothClickConfig {
 
   String logFilePath = null
 
-  String clickHelperName = "com/sloth/click_util/ClickHelper"
+  String clickHelperName = "com/hyc/helper/helper/ClickHelper"
 
 
 }

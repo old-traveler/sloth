@@ -2,10 +2,12 @@ package com.sloth.plugin
 
 class SlothLogHelper{
 
-  static SlothLogHelper slothLogHelper
+  private static volatile SlothLogHelper slothLogHelper
 
   def content = new StringBuilder()
   private String filePath = null
+
+  private  Map<String,StringBuilder> mMapping
 
   static SlothLogHelper getDefault(){
     if (slothLogHelper == null){
@@ -49,6 +51,8 @@ class SlothLogHelper{
       }
     }
   }
+
+
 
 
 

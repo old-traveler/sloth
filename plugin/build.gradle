@@ -1,5 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
+
+
 repositories {
   jcenter()
   google()
@@ -12,22 +14,17 @@ dependencies {
   implementation gradleApi()
   //groovy sdk
   implementation localGroovy()
-
-  implementation 'com.google.code.gson:gson:2.8.5'
-
-  implementation 'com.android.tools.build:gradle:3.5.1'
-
-  implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+  implementation 'com.android.tools.build:gradle:3.5.2'
 }
 
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 
 group = 'com.sloth.plugin'
 
-version = '1.1.4'
+version = '1.1.6'
 
 // 指定上传的路径
 def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath

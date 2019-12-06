@@ -16,7 +16,7 @@ class SlothTransform extends Transform {
 
   boolean enableLife = true
 
-  static SlothClickConfig slothClickConfig = null
+  static SlothClickConfig slothClickConfig = new SlothClickConfig()
 
   void initConfig(Project project, SlothClickConfig clickConfig) {
     slothClickConfig = clickConfig
@@ -33,7 +33,6 @@ class SlothTransform extends Transform {
     //      //添加过滤规则
     //      name.contains("Activity")
     //    }
-
   }
 
   @Override
@@ -53,7 +52,7 @@ class SlothTransform extends Transform {
 
   @Override
   boolean isIncremental() {
-    return false
+    return true
   }
 
   @Override
@@ -63,29 +62,33 @@ class SlothTransform extends Transform {
     def startTime = System.currentTimeMillis()
     Collection<TransformInput> inputs = transformInvocation.inputs
     def outputProvider = transformInvocation.outputProvider
-    //TODO 处理增量编译
+    def isIncremental = transformInvocation.isIncremental()
+    println("isIncremental ：$isIncremental")
     if (outputProvider != null) {
       outputProvider.deleteAll()
     }
     //遍历inputs
     inputs.each {
       it.directoryInputs.each { directoryInput ->
-        fileHandler.handleDirectoryInput directoryInput, outputProvider, { data ->
-          classVisitor(enableLife, data)
-        }
+        fileHandler.handleDirectoryInput directoryInput, outputProvider, isIncremental,
+            { String name, byte[] data ->
+              classVisitor(enableLife, data, name)
+            }
       }
 
       it.jarInputs.each { jarInput ->
-        fileHandler.handleJarInput jarInput, outputProvider, { data ->
-          classVisitor(enableLife, data)
-        }
+        fileHandler.handleJarInput jarInput, outputProvider, isIncremental,
+            { String name, byte[] data ->
+              classVisitor(enableLife, data, name)
+            }
       }
     }
     SlothLogHelper.getDefault().save()
     print "============================== sloth transform end cost : ${System.currentTimeMillis() - startTime}============================="
   }
 
-  static byte[] classVisitor(boolean enableLife, byte[] bytes) {
+  static byte[] classVisitor(boolean enableLife, byte[] bytes, String name) {
+    println("start class visitor for $name")
     def classReader = new ClassReader(bytes)
     def classWriter = new ClassWriter(classReader,
         ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS)
@@ -93,7 +96,7 @@ class SlothTransform extends Transform {
     try {
       classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
     } catch (Exception e) {
-      if(!e instanceof ClassNotFoundException){
+      if (!e instanceof ClassNotFoundException) {
         e.printStackTrace()
       }
     }

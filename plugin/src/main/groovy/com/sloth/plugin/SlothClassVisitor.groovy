@@ -6,7 +6,8 @@ import org.objectweb.asm.Opcodes
 
 class SlothClassVisitor extends ClassVisitor {
 
-  String mClassName
+  private String mClassName
+  private String dirName
 
   boolean enableLife = true
   private def flags = 'BCDFIJSZL'
@@ -20,6 +21,7 @@ class SlothClassVisitor extends ClassVisitor {
   @Override
   void visit(int version, int access, String name, String signature, String superName,
       String[] interfaces) {
+    println("================> $name  ${superName}   ${interfaces}")
     this.mClassName = name
     super.visit(version, access, name, signature, superName, interfaces)
   }
@@ -28,9 +30,9 @@ class SlothClassVisitor extends ClassVisitor {
   MethodVisitor visitMethod(int access, String name, String desc, String signature,
       String[] exceptions) {
     def mv = cv.visitMethod(access, name, desc, signature, exceptions)
-    if (!SlothTransform.slothClickConfig.enableVisit){
-      return mv
-    }
+//    if (!SlothTransform.slothClickConfig.enableVisit){
+//      return mv
+//    }
     if ("onCreate" == name && desc == "(Landroid/os/Bundle;)V" && this.enableLife) {
       SlothLogHelper.getDefault().appendLine("$mClassName --> $name")
       return new SlothOnCreateVisitor(mv, mClassName)
@@ -42,6 +44,7 @@ class SlothClassVisitor extends ClassVisitor {
       return new SlothOnClickVisitor(mv,mClassName)
     }else if (name.startsWith("lambda\$") && desc.endsWith("Landroid/view/View;)V") && desc.startsWith("(")) {
       def index= getOffsetByDesc(desc)
+      //解决静态方法栈帧不加载this参数
       if (access == 4106){
         index--
       }
@@ -51,6 +54,12 @@ class SlothClassVisitor extends ClassVisitor {
     }
     mv
   }
+
+  @Override
+  void visitInnerClass(String name, String outerName, String innerName, int access) {
+    super.visitInnerClass(name, outerName, innerName, access)
+  }
+
 
   /**
    * 计算java lambda表达式中view参数的偏移量

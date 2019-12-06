@@ -16,4 +16,6 @@ public class BaseViewHolder {
   public void setOnClickListener(View.OnClickListener onClickListener){
     view.setOnClickListener(onClickListener);
   }
+
+
 }

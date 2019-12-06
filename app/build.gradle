@@ -33,6 +33,8 @@ android {
   }
 }
 
+
+
 slothClickConfig {
   //添加过滤规则
   addRules { String name ->

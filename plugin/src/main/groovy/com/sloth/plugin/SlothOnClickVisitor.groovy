@@ -15,12 +15,12 @@ class SlothOnClickVisitor extends MethodVisitor {
   int offset = 0
 
   SlothOnClickVisitor(MethodVisitor mv, String className) {
-    super(ASM4, mv)
+    super(ASM5, mv)
     this.className = className
   }
 
   SlothOnClickVisitor(MethodVisitor mv, String className, int offset) {
-    super(ASM4, mv)
+    super(ASM5, mv)
     this.className = className
     this.offset = offset
   }
